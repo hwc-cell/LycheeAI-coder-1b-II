@@ -1,6 +1,17 @@
+---
+license: apache-2.0
+tags:
+  - mlx
+  - code
+  - minicpm
+  - chinese
+  - conversational
+base_model: openbmb/MiniCPM5-1B
+---
+
 # LycheeAI-coder-1b-II
 
-> **当前版本：V3**（反谄媚版）
+> **当前版本：V4**（代码打磨版）
 > 基于 [MiniCPM5-1B](https://huggingface.co/openbmb/MiniCPM5-1B) 微调的轻量编程助手 · Apache 2.0
 
 **这是个人开发者的初次尝试，模型能力有限，1B 参数注定它只是个"轻量小助手"，请不要用 GPT / Claude / DeepSeek 的标准来要求它。** 如果你愿意，可以把它当成一个跑在本地、不用联网、响应飞快的小工具。
@@ -87,7 +98,7 @@ print(generate(model, tokenizer, prompt=prompt, max_tokens=512))
 
 ### 用 LoRA adapter
 
-本仓库的 `adapters/` 目录是 V3 的 adapter，可加载到 MiniCPM5-1B 基座上：
+本仓库的 `adapters/` 目录是 V4 的 adapter，可加载到 MiniCPM5-1B 基座上：
 
 ```bash
 mlx_lm.fuse --model openbmb/MiniCPM5-1B-MLX \
@@ -109,17 +120,18 @@ mlx_lm.fuse --model openbmb/MiniCPM5-1B-MLX \
 
 ## 训练说明
 
-从零训练（不是从旧模型续训），数据来自作者手工编写与整理，共 **1637 条**，经过三轮迭代：
+从零训练（不是从旧模型续训），数据来自作者手工编写与整理，当前数据 **1740 条**，经过四轮迭代：
 
 | 版本 | 重点 |
 |------|------|
 | V1 | 基础能力：代码、多语言（中/英/粤）、日常、情感、身份 |
 | V2 | 补齐"关思考时答难题"的能力；修掉思考里乱判断语言的 bug |
-| **V3** | **反谄媚**：教会它纠正用户给出的错误前提，同时防止矫枉过正 |
+| V3 | 反谄媚：教会它纠正用户给出的错误前提，同时防止矫枉过正 |
+| **V4** | **代码打磨**：根据第三方体验报告定向补齐——Python 语义陷阱（`dict.get` 不抛错等）、requests 指数退避、Pydantic v2 正确用法、不编造 API、算法边界处理、模糊需求澄清、数学应用题理解 |
 
 训练配置：LoRA rank 8 / 16 层 / batch 2 / seq 2048 / lr 5e-5，MLX-LM 框架，Apple Silicon 本地训练。
 
-数据分布：带思考样本 566 条，直答样本 1071 条，各类题型在两个模式下都有覆盖。
+数据分布：带思考样本 566 条，直答样本 1174 条，各类题型在两个模式下都有覆盖。
 
 ---
 
